@@ -78,7 +78,7 @@ export default function App(): ReactNode {
   }
 
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={import.meta.env.BASE_URL}>
       <AppProvider>
         {/* Custom cursor (desktop only, hides on touch + reduced-motion) */}
         <CursorDot />
