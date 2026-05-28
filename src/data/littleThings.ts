@@ -4,71 +4,64 @@ import type { LittleThing } from '@/types/section'
  * ── LITTLE THINGS ABOUT US ───────────────────────────────────────────────
  *
  * The small details that define your relationship.
- * iconName = any Lucide icon name (PascalCase).
- * Replace every "detail" with real content before sharing.
+ * iconName = any Lucide icon name (PascalCase). See LittleThings/index.tsx
+ * for the icons currently mapped — add more there if needed.
  */
 export const LITTLE_THINGS: LittleThing[] = [
   {
     id: 'lt-1',
     iconName: 'Music',
-    label: 'Our Song',
-    detail: 'Placeholder — add your song title and artist here.',
+    label: 'Our Songs',
+    detail: 'O Manu O Manu · Ulomi Ulomi Thke · Manu Kya Mile…',
     category: 'favorites',
   },
   {
     id: 'lt-2',
     iconName: 'Coffee',
-    label: 'Favourite Food',
-    detail: 'Placeholder — add what you both love to eat.',
+    label: 'Our Food',
+    detail: 'Puri ru Bootr Ghugni (laaj lga tu), coffee with homemade oats peda.',
     category: 'favorites',
   },
   {
     id: 'lt-3',
-    iconName: 'Laugh',
-    label: 'Inside Jokes',
-    detail: 'Placeholder — that one thing only you two understand.',
+    iconName: 'Smile',
+    label: 'Favourite Characters',
+    detail: 'Regie · Gadget Maharani · Hunter · BGB.',
     category: 'us',
   },
   {
     id: 'lt-4',
     iconName: 'Film',
     label: 'Movie Nights',
-    detail: 'Placeholder — genres, that one film you\'ve watched 10 times.',
+    detail: 'The Secret Life of Pets · Stray.',
     category: 'habits',
   },
   {
     id: 'lt-5',
-    iconName: 'Tag',
-    label: 'Nicknames',
-    detail: 'Placeholder — what you call each other.',
-    category: 'us',
-  },
-  {
-    id: 'lt-6',
     iconName: 'Calendar',
     label: 'First Date',
-    detail: 'May 29, 2016 — Placeholder: add the story of where you went.',
+    detail: 'Midtown Restaurant, Nalbari.',
     category: 'milestones',
   },
   {
-    id: 'lt-7',
-    iconName: 'Heart',
-    label: 'Love Language',
-    detail: 'Placeholder — quality time / words of affirmation / etc.',
+    id: 'lt-6',
+    iconName: 'Tag',
+    label: 'Love Names',
+    detail: 'Manu · Kutu · Tapu · Legulu Ji · Bubuli Ji · BGB · Munuli Ji · Sofy.',
     category: 'us',
   },
   {
-    id: 'lt-8',
+    id: 'lt-7',
     iconName: 'Home',
     label: 'Comfort Place',
-    detail: 'Placeholder — the one spot that always feels like home to you both.',
+    detail: 'In your arms — in any place.',
     category: 'favorites',
   },
   {
-    id: 'lt-9',
+    id: 'lt-8',
     iconName: 'Moon',
     label: 'Always Do',
-    detail: 'Placeholder — the ritual you always do together (late-night walks, etc.).',
+    detail: 'Gamu gamu with manu · ruti bela · mamu mamu · tapu kamu · pithit utha.',
     category: 'habits',
   },
 ]

@@ -40,17 +40,18 @@ export function PlacesPage(): ReactNode {
 
           {/* Real map */}
           <motion.div
-            className="relative mb-7"
+            className="mb-12"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3 }}
           >
             <RealMap places={PLACES} activeId={activePlaceId} onPinClick={handlePinClick} />
-
-            {activePlaceId && (
-              <PlaceCard place={activePlace} onClose={() => setActivePlaceId(null)} />
-            )}
           </motion.div>
+
+          {/* Centered place modal — rendered above everything when active */}
+          {activePlaceId && (
+            <PlaceCard place={activePlace} onClose={() => setActivePlaceId(null)} />
+          )}
 
           {/* Place list — polaroid cards */}
           <div className="grid grid-cols-2 gap-6 mb-10">

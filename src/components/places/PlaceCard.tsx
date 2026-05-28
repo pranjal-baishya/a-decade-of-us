@@ -16,14 +16,38 @@ export function PlaceCard({ place, onClose }: PlaceCardProps): ReactNode {
     <AnimatePresence>
       {place && (
         <motion.div
-          className="absolute"
-          style={{ top: '10%', left: '50%', transform: 'translateX(-50%)', width: '90%', maxWidth: 320, zIndex: 1000 }}
-          initial={{ opacity: 0, scale: 0.88, y: 12 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.88, y: 12 }}
-          transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+          className="fixed inset-0 flex items-center justify-center"
+          style={{ zIndex: 1000, padding: '24px' }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.25 }}
         >
-          <PlaceCardInner place={place} onClose={onClose} key={place.id} />
+          {/* Dimmed backdrop — click to close */}
+          <motion.div
+            className="absolute inset-0"
+            style={{ background: 'rgba(8,6,4,0.72)', backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)' }}
+            onClick={onClose}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            aria-hidden
+          />
+
+          {/* Centered card */}
+          <motion.div
+            className="relative w-full"
+            style={{ maxWidth: 360 }}
+            initial={{ opacity: 0, scale: 0.9, y: 14 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.9, y: 14 }}
+            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+            role="dialog"
+            aria-modal="true"
+            aria-label={`${place.name} details`}
+          >
+            <PlaceCardInner place={place} onClose={onClose} key={place.id} />
+          </motion.div>
         </motion.div>
       )}
     </AnimatePresence>
@@ -40,16 +64,24 @@ function PlaceCardInner({ place, onClose }: PlaceCardInnerProps): ReactNode {
   const [index, setIndex] = useState(0)
   const hasMany = photos.length > 1
 
-  // Keyboard navigation
+  // Keyboard: arrow nav + escape to close
   useEffect(() => {
-    if (!hasMany) return
     const handler = (e: KeyboardEvent): void => {
+      if (e.key === 'Escape')     onClose()
+      if (!hasMany) return
       if (e.key === 'ArrowLeft')  setIndex((i) => Math.max(0, i - 1))
       if (e.key === 'ArrowRight') setIndex((i) => Math.min(photos.length - 1, i + 1))
     }
     document.addEventListener('keydown', handler)
     return () => document.removeEventListener('keydown', handler)
-  }, [hasMany, photos.length])
+  }, [hasMany, photos.length, onClose])
+
+  // Lock body scroll while open
+  useEffect(() => {
+    const prev = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => { document.body.style.overflow = prev }
+  }, [])
 
   const goPrev = (): void => setIndex((i) => Math.max(0, i - 1))
   const goNext = (): void => setIndex((i) => Math.min(photos.length - 1, i + 1))

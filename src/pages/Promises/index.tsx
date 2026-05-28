@@ -102,7 +102,12 @@ function PromiseCard({ promise, index, sealed, onSeal }: PromiseCardProps): Reac
       >
         <p
           className="font-serif leading-relaxed"
-          style={{ color: 'var(--color-cream)', fontSize: 'clamp(0.95rem, 2.5vw, 1.05rem)', lineHeight: 1.65 }}
+          style={{
+            color: 'var(--color-cream)',
+            fontSize: 'clamp(0.95rem, 2.5vw, 1.05rem)',
+            lineHeight: 1.65,
+            whiteSpace: 'pre-line',
+          }}
         >
           {promise.text}
         </p>

@@ -82,7 +82,7 @@ export function EndingPage(): ReactNode {
 
         {/* Days counter */}
         <motion.p
-          className="font-sans mb-6"
+          className="font-sans mb-5"
           style={{ color: 'var(--color-amber)', fontSize: '0.78rem', letterSpacing: '0.2em', opacity: 0.65 }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 0.65 }}
@@ -93,7 +93,7 @@ export function EndingPage(): ReactNode {
 
         {/* Stats scoreboard */}
         <motion.div
-          className="mb-10"
+          className="mb-7"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, delay: 1.6 }}
@@ -148,7 +148,7 @@ export function EndingPage(): ReactNode {
 
         {/* Heart */}
         <motion.p
-          className="font-serif mt-14 text-4xl"
+          className="font-serif mt-10 text-4xl"
           data-cursor="heart"
           style={{ color: 'rgba(196,149,42,0.35)' }}
           initial={{ opacity: 0, scale: 0.6 }}
