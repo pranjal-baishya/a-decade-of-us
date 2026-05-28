@@ -41,29 +41,38 @@ export function LetterPaper({ content }: LetterPaperProps): ReactNode {
 
         {/* Decorative opener — sweeps in like ink */}
         <motion.p
-          className="romantic-line mb-6"
-          style={{ color: 'rgba(196,149,42,0.55)', fontSize: '1rem', clipPath: 'inset(0 100% 0 0)' }}
+          className="romantic-line mb-7 text-center"
+          style={{
+            color: 'rgba(196,149,42,0.7)',
+            fontSize: 'clamp(1.1rem, 3vw, 1.35rem)',
+            letterSpacing: '0.02em',
+            clipPath: 'inset(0 100% 0 0)',
+          }}
           whileInView={{ clipPath: 'inset(0 0% 0 0)' }}
           viewport={{ once: true, amount: 0.8 }}
           transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
         >
-          My love,
+          {content.opener}
         </motion.p>
 
-        {/* Paragraphs — each sweeps in left-to-right like handwriting */}
+        {/* Stanzas — each one sweeps in left-to-right like handwriting.
+            white-space: pre-line preserves line breaks inside a stanza so
+            multi-line poetry reads with the intended cadence. */}
         {content.paragraphs.map((para, i) => (
           <motion.p
             key={i}
-            className="font-serif leading-relaxed mb-5"
+            className="font-serif leading-relaxed"
             style={{
               color: 'var(--color-cream)',
               fontSize: 'clamp(1rem, 2.5vw, 1.15rem)',
-              lineHeight: 1.75,
+              lineHeight: 1.85,
+              whiteSpace: 'pre-line',
+              marginBottom: '1.6rem',
               clipPath: 'inset(0 100% 0 0)',
             }}
             whileInView={{ clipPath: 'inset(0 0% 0 0)' }}
             viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 1.2, delay: i * 0.12, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 1.2, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
           >
             {para}
           </motion.p>

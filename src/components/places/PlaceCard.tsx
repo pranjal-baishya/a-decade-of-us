@@ -37,11 +37,11 @@ export function PlaceCard({ place, onClose }: PlaceCardProps): ReactNode {
           {/* Centered card */}
           <motion.div
             className="relative w-full"
-            style={{ maxWidth: 360 }}
-            initial={{ opacity: 0, scale: 0.9, y: 14 }}
+            style={{ maxWidth: 540, maxHeight: '92dvh', display: 'flex', flexDirection: 'column' }}
+            initial={{ opacity: 0, scale: 0.92, y: 14 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, y: 14 }}
-            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+            exit={{ opacity: 0, scale: 0.92, y: 14 }}
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
             role="dialog"
             aria-modal="true"
             aria-label={`${place.name} details`}
@@ -91,19 +91,30 @@ function PlaceCardInner({ place, onClose }: PlaceCardInnerProps): ReactNode {
   return (
     <div
       style={{
-        background: 'rgba(24,18,10,0.96)',
+        background: 'var(--color-cinema-dark)',
         border: '1px solid var(--color-amber-border)',
-        borderRadius: 'var(--radius-card)',
-        boxShadow: 'var(--shadow-card-lifted)',
-        backdropFilter: 'blur(20px)',
+        borderRadius: 18,
+        boxShadow: '0 24px 80px rgba(0,0,0,0.7), 0 0 60px rgba(196,149,42,0.06)',
         overflow: 'hidden',
+        display: 'flex',
+        flexDirection: 'column',
+        flex: 1,
+        minHeight: 0,
       }}
     >
-      {/* Photo gallery — swipeable */}
+      {/* Photo gallery — swipeable. object-contain so portraits and landscapes
+          both show fully without cropping faces. */}
       {photos.length > 0 && (
-        <div className="relative w-full overflow-hidden" style={{ height: 160, background: '#1a1410' }}>
+        <div
+          className="relative w-full overflow-hidden flex items-center justify-center"
+          style={{
+            background: '#0c0907',
+            aspectRatio: '4 / 3',
+            maxHeight: '58dvh',
+          }}
+        >
           <motion.div
-            className="absolute inset-0"
+            className="absolute inset-0 flex items-center justify-center"
             drag={hasMany ? 'x' : false}
             dragConstraints={{ left: 0, right: 0 }}
             dragElastic={0.18}
@@ -117,7 +128,14 @@ function PlaceCardInner({ place, onClose }: PlaceCardInnerProps): ReactNode {
                 key={photos[index]}
                 src={assetUrl(photos[index])}
                 alt={`${place.name} photo ${index + 1}`}
-                className="w-full h-full object-cover photo-grade"
+                className="photo-grade"
+                style={{
+                  maxWidth: '100%',
+                  maxHeight: '100%',
+                  width: 'auto',
+                  height: 'auto',
+                  objectFit: 'contain',
+                }}
                 initial={{ opacity: 0, scale: 1.04 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.98 }}
@@ -126,13 +144,6 @@ function PlaceCardInner({ place, onClose }: PlaceCardInnerProps): ReactNode {
               />
             </AnimatePresence>
           </motion.div>
-
-          {/* Bottom gradient overlay */}
-          <div
-            className="absolute inset-x-0 bottom-0 pointer-events-none"
-            style={{ height: '50%', background: 'linear-gradient(to top, rgba(24,18,10,0.85), transparent)' }}
-            aria-hidden
-          />
 
           {/* Prev / Next */}
           {hasMany && (
@@ -143,16 +154,18 @@ function PlaceCardInner({ place, onClose }: PlaceCardInnerProps): ReactNode {
                 disabled={!hasPrev}
                 aria-label="Previous photo"
                 data-ripple
-                className="absolute top-1/2 left-2 -translate-y-1/2 flex items-center justify-center w-8 h-8 rounded-full"
+                className="absolute top-1/2 left-3 -translate-y-1/2 flex items-center justify-center rounded-full"
                 style={{
-                  background: 'rgba(10,8,6,0.7)',
+                  width: 38, height: 38,
+                  background: 'rgba(10,8,6,0.72)',
                   border: '1px solid rgba(196,149,42,0.25)',
-                  color: 'rgba(237,226,204,0.8)',
+                  color: 'rgba(237,226,204,0.85)',
                   opacity: hasPrev ? 1 : 0.25,
                   cursor: hasPrev ? 'pointer' : 'default',
+                  backdropFilter: 'blur(6px)',
                 }}
               >
-                <ChevronLeft size={14} />
+                <ChevronLeft size={18} />
               </button>
               <button
                 type="button"
@@ -160,31 +173,33 @@ function PlaceCardInner({ place, onClose }: PlaceCardInnerProps): ReactNode {
                 disabled={!hasNext}
                 aria-label="Next photo"
                 data-ripple
-                className="absolute top-1/2 right-2 -translate-y-1/2 flex items-center justify-center w-8 h-8 rounded-full"
+                className="absolute top-1/2 right-3 -translate-y-1/2 flex items-center justify-center rounded-full"
                 style={{
-                  background: 'rgba(10,8,6,0.7)',
+                  width: 38, height: 38,
+                  background: 'rgba(10,8,6,0.72)',
                   border: '1px solid rgba(196,149,42,0.25)',
-                  color: 'rgba(237,226,204,0.8)',
+                  color: 'rgba(237,226,204,0.85)',
                   opacity: hasNext ? 1 : 0.25,
                   cursor: hasNext ? 'pointer' : 'default',
+                  backdropFilter: 'blur(6px)',
                 }}
               >
-                <ChevronRight size={14} />
+                <ChevronRight size={18} />
               </button>
 
               {/* Dot indicators */}
               <div
-                className="absolute bottom-2 inset-x-0 flex justify-center gap-1.5 pointer-events-none"
+                className="absolute bottom-3 inset-x-0 flex justify-center gap-1.5 pointer-events-none"
                 aria-hidden
               >
                 {photos.map((_, i) => (
                   <span
                     key={i}
                     style={{
-                      width: i === index ? 14 : 5,
+                      width: i === index ? 16 : 5,
                       height: 5,
                       borderRadius: 9999,
-                      background: i === index ? 'var(--color-amber)' : 'rgba(196,149,42,0.4)',
+                      background: i === index ? 'var(--color-amber)' : 'rgba(196,149,42,0.45)',
                       transition: 'width 0.3s, background 0.3s',
                     }}
                   />
@@ -193,15 +208,16 @@ function PlaceCardInner({ place, onClose }: PlaceCardInnerProps): ReactNode {
 
               {/* Photo count */}
               <span
-                className="absolute top-2 left-2 font-sans"
+                className="absolute top-3 left-3 font-sans"
                 style={{
-                  fontSize: '0.55rem',
+                  fontSize: '0.6rem',
                   letterSpacing: '0.15em',
-                  color: 'rgba(237,226,204,0.85)',
-                  background: 'rgba(10,8,6,0.7)',
-                  padding: '3px 8px',
+                  color: 'rgba(237,226,204,0.9)',
+                  background: 'rgba(10,8,6,0.72)',
+                  padding: '4px 10px',
                   borderRadius: 999,
-                  border: '1px solid rgba(196,149,42,0.20)',
+                  border: '1px solid rgba(196,149,42,0.22)',
+                  backdropFilter: 'blur(6px)',
                 }}
               >
                 {index + 1} / {photos.length}
@@ -212,28 +228,41 @@ function PlaceCardInner({ place, onClose }: PlaceCardInnerProps): ReactNode {
       )}
 
       {/* Info */}
-      <div className="p-4">
-        <div className="flex items-start justify-between mb-1.5">
-          <div>
-            <p className="font-sans text-[0.6rem] uppercase tracking-[0.25em] flex items-center gap-1" style={{ color: 'var(--color-amber)', opacity: 0.8 }}>
-              <MapPin size={9} /> {place.region}
-            </p>
-            <h3 className="font-serif text-xl mt-0.5" style={{ color: 'var(--color-cream)' }}>{place.name}</h3>
-          </div>
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label="Close"
-            data-ripple
-            className="flex items-center justify-center w-7 h-7 rounded-full mt-0.5"
-            style={{ background: 'rgba(40,28,14,0.8)', border: '1px solid rgba(196,149,42,0.2)', color: 'rgba(237,226,204,0.6)', flexShrink: 0 }}
-          >
-            <X size={12} />
-          </button>
+      <div style={{ padding: '20px 22px 22px' }}>
+        <div className="flex items-center gap-2 mb-2">
+          <p className="font-sans uppercase flex items-center gap-1.5" style={{ color: 'var(--color-amber)', fontSize: '0.62rem', letterSpacing: '0.25em', opacity: 0.85 }}>
+            <MapPin size={10} /> {place.region}
+          </p>
         </div>
-        <p className="font-sans text-[0.65rem] uppercase tracking-[0.15em] mb-2" style={{ color: 'var(--color-cream-muted)' }}>{formatLong(place.dates)}</p>
-        <p className="font-serif italic text-sm leading-relaxed" style={{ color: 'var(--color-cream-dim)' }}>{place.note}</p>
+        <h3 className="font-serif" style={{ color: 'var(--color-cream)', fontSize: '1.4rem', lineHeight: 1.15, marginBottom: 6, letterSpacing: '-0.005em' }}>
+          {place.name}
+        </h3>
+        <p className="font-sans uppercase" style={{ color: 'var(--color-cream-muted)', fontSize: '0.62rem', letterSpacing: '0.18em', marginBottom: 12 }}>
+          {formatLong(place.dates)}
+        </p>
+        <p className="font-serif italic" style={{ color: 'var(--color-cream-dim)', fontSize: '0.92rem', lineHeight: 1.6 }}>
+          {place.note}
+        </p>
       </div>
+
+      {/* Close */}
+      <button
+        type="button"
+        onClick={onClose}
+        aria-label="Close"
+        data-ripple
+        className="absolute flex items-center justify-center rounded-full"
+        style={{
+          top: 12, right: 12,
+          width: 34, height: 34,
+          background: 'rgba(10,8,6,0.78)',
+          border: '1px solid rgba(196,149,42,0.25)',
+          color: 'rgba(237,226,204,0.85)',
+          backdropFilter: 'blur(6px)',
+        }}
+      >
+        <X size={15} />
+      </button>
     </div>
   )
 }

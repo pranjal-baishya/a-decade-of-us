@@ -58,6 +58,14 @@ function ModalContent({ memory, onClose, onPrev, onNext, hasPrev, hasNext }: Mod
   const pinchRef  = useRef<number | null>(null)
   const zoomStart = useRef(1)
   const place = memory.placeId ? PLACES.find((p) => p.id === memory.placeId) : null
+  const hasMeta = Boolean(memory.title || memory.description)
+
+  // Lock body scroll while open
+  useEffect(() => {
+    const prev = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => { document.body.style.overflow = prev }
+  }, [])
 
   const onTouchStart = (e: React.TouchEvent): void => {
     if (e.touches.length === 2) {
@@ -83,30 +91,52 @@ function ModalContent({ memory, onClose, onPrev, onNext, hasPrev, hasNext }: Mod
 
   return (
     <motion.div
-      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-6"
+      className="fixed inset-0 z-50 flex items-center justify-center"
+      style={{ padding: 'clamp(12px, 3vw, 28px)' }}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3 }}
       onClick={() => { if (zoom === 1) onClose() }}
+      role="dialog"
+      aria-modal="true"
+      aria-label={memory.title || 'Memory'}
     >
       {/* Backdrop */}
-      <div className="absolute inset-0" style={{ background: 'rgba(8,6,4,0.90)', backdropFilter: 'blur(18px)' }} aria-hidden />
+      <div
+        className="absolute inset-0"
+        style={{ background: 'rgba(8,6,4,0.92)', backdropFilter: 'blur(18px)', WebkitBackdropFilter: 'blur(18px)' }}
+        aria-hidden
+      />
 
-      {/* Content */}
+      {/* Card */}
       <motion.div
-        className="relative z-10 w-full sm:max-w-sm flex flex-col overflow-hidden"
-        style={{ maxHeight: '92dvh', background: 'var(--color-cinema-dark)', borderTop: '1px solid var(--color-amber-border)', borderRadius: '20px 20px 0 0' }}
-        initial={{ y: '100%' }}
-        animate={{ y: 0 }}
-        exit={{ y: '100%' }}
-        transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+        className="relative z-10 w-full flex flex-col overflow-hidden"
+        style={{
+          maxWidth: 560,
+          maxHeight: '92dvh',
+          background: 'var(--color-cinema-dark)',
+          border: '1px solid var(--color-amber-border)',
+          borderRadius: 18,
+          boxShadow: '0 24px 80px rgba(0,0,0,0.7), 0 0 60px rgba(196,149,42,0.06)',
+        }}
+        initial={{ opacity: 0, scale: 0.92, y: 14 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.92, y: 14 }}
+        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Photo — swipeable + pinch-zoomable */}
+        {/* Photo — swipeable + pinch-zoomable. object-contain so portraits/landscapes both show fully. */}
         <motion.div
-          className="w-full overflow-hidden"
-          style={{ aspectRatio: '4/3', maxHeight: '55dvh', cursor: zoom > 1 ? 'grab' : 'default' }}
+          className="relative w-full overflow-hidden flex items-center justify-center"
+          style={{
+            background: '#0c0907',
+            // Use a generous aspect that fits most photos and keeps mobile usable;
+            // object-contain lets the image fill height and letterbox horizontally.
+            aspectRatio: '4 / 3',
+            maxHeight: '62dvh',
+            cursor: zoom > 1 ? 'grab' : 'default',
+          }}
           drag={zoom === 1 ? 'x' : false}
           dragConstraints={{ left: 0, right: 0 }}
           dragElastic={0.2}
@@ -122,73 +152,111 @@ function ModalContent({ memory, onClose, onPrev, onNext, hasPrev, hasNext }: Mod
             <motion.img
               src={assetUrl(memory.imageUrl)}
               alt={memory.title}
-              className="w-full h-full object-cover photo-grade"
-              style={{ scale: zoom, transformOrigin: 'center', transition: zoom === 1 ? 'scale 0.3s ease' : 'none' }}
+              className="photo-grade"
+              style={{
+                maxWidth: '100%',
+                maxHeight: '100%',
+                width: 'auto',
+                height: 'auto',
+                objectFit: 'contain',
+                scale: zoom,
+                transformOrigin: 'center',
+                transition: zoom === 1 ? 'scale 0.3s ease' : 'none',
+              }}
               data-cursor="heart"
+              draggable={false}
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center" style={{ background: '#1a1410' }}>
-              <p className="font-serif text-2xl" style={{ color: 'rgba(196,149,42,0.3)' }}>{formatShort(memory.date)}</p>
-            </div>
+            <p className="font-serif text-2xl" style={{ color: 'rgba(196,149,42,0.3)' }}>
+              {formatShort(memory.date)}
+            </p>
+          )}
+
+          {/* Prev / Next photo arrows — overlaid on image */}
+          {(hasPrev || hasNext) && zoom === 1 && (
+            <>
+              {hasPrev && (
+                <button type="button" onClick={(e) => { e.stopPropagation(); onPrev?.() }} aria-label="Previous" data-ripple
+                  className="absolute top-1/2 -translate-y-1/2 left-3 flex items-center justify-center rounded-full"
+                  style={{
+                    width: 38, height: 38,
+                    background: 'rgba(10,8,6,0.7)',
+                    border: '1px solid rgba(196,149,42,0.25)',
+                    color: 'rgba(237,226,204,0.85)',
+                    backdropFilter: 'blur(6px)',
+                  }}>
+                  <ChevronLeft size={18} />
+                </button>
+              )}
+              {hasNext && (
+                <button type="button" onClick={(e) => { e.stopPropagation(); onNext?.() }} aria-label="Next" data-ripple
+                  className="absolute top-1/2 -translate-y-1/2 right-3 flex items-center justify-center rounded-full"
+                  style={{
+                    width: 38, height: 38,
+                    background: 'rgba(10,8,6,0.7)',
+                    border: '1px solid rgba(196,149,42,0.25)',
+                    color: 'rgba(237,226,204,0.85)',
+                    backdropFilter: 'blur(6px)',
+                  }}>
+                  <ChevronRight size={18} />
+                </button>
+              )}
+            </>
           )}
         </motion.div>
 
-        {/* Swipe hint dots */}
-        {(hasPrev || hasNext) && zoom === 1 && (
-          <div className="absolute bottom-28 inset-x-0 flex justify-center gap-1.5 pointer-events-none" aria-hidden>
-            {hasPrev && <div className="w-1.5 h-1.5 rounded-full" style={{ background: 'rgba(196,149,42,0.4)' }} />}
-            <div className="w-4 h-1.5 rounded-full" style={{ background: 'rgba(196,149,42,0.75)' }} />
-            {hasNext && <div className="w-1.5 h-1.5 rounded-full" style={{ background: 'rgba(196,149,42,0.4)' }} />}
+        {/* Meta — only rendered when we have prose, otherwise show a thin date strip */}
+        {hasMeta ? (
+          <div style={{ padding: '20px 22px 22px' }}>
+            <div className="flex items-center gap-3 mb-2 flex-wrap">
+              <p className="font-sans uppercase" style={{ color: 'var(--color-amber)', fontSize: '0.62rem', letterSpacing: '0.25em', opacity: 0.85 }}>
+                {formatShort(memory.date)}
+              </p>
+              {place && (
+                <span className="flex items-center gap-1 font-sans" style={{ color: 'var(--color-cream-muted)', fontSize: '0.62rem', letterSpacing: '0.05em' }}>
+                  <MapPin size={10} />
+                  {place.name}
+                </span>
+              )}
+            </div>
+            {memory.title && (
+              <h3 className="font-serif" style={{ color: 'var(--color-cream)', fontSize: '1.15rem', lineHeight: 1.25, marginBottom: 8 }}>
+                {memory.title}
+              </h3>
+            )}
+            {memory.description && (
+              <p className="font-serif" style={{ color: 'var(--color-cream-dim)', fontSize: '0.9rem', lineHeight: 1.6, fontStyle: 'italic' }}>
+                {memory.description}
+              </p>
+            )}
           </div>
-        )}
-
-        {/* Meta */}
-        <div className="p-5 pb-8">
-          <div className="flex items-center gap-2 mb-1">
-            <p className="font-sans text-[0.62rem] tracking-[0.25em] uppercase" style={{ color: 'var(--color-amber)', opacity: 0.8 }}>
+        ) : (
+          <div className="flex items-center justify-center gap-2" style={{ padding: '14px 18px 16px' }}>
+            <p className="font-sans uppercase" style={{ color: 'var(--color-amber)', fontSize: '0.6rem', letterSpacing: '0.28em', opacity: 0.8 }}>
               {formatShort(memory.date)}
             </p>
             {place && (
-              <span className="flex items-center gap-0.5 font-sans text-[0.6rem]" style={{ color: 'var(--color-cream-muted)' }}>
+              <span className="flex items-center gap-1 font-sans" style={{ color: 'var(--color-cream-muted)', fontSize: '0.6rem', letterSpacing: '0.05em' }}>
                 <MapPin size={9} />
                 {place.name}
               </span>
             )}
           </div>
-          <h3 className="font-serif text-lg mb-1.5" style={{ color: 'var(--color-cream)' }}>{memory.title}</h3>
-          <p className="font-sans text-sm leading-relaxed" style={{ color: 'var(--color-cream-dim)', fontSize: '0.85rem' }}>{memory.description}</p>
-        </div>
-
-        {/* Drag handle */}
-        <div className="absolute top-3 left-1/2 -translate-x-1/2 w-10 h-1 rounded-full" style={{ background: 'rgba(196,149,42,0.25)' }} />
+        )}
 
         {/* Close */}
         <button type="button" onClick={onClose} aria-label="Close" data-ripple
-          className="absolute top-3.5 right-3.5 flex items-center justify-center w-8 h-8 rounded-full"
-          style={{ background: 'rgba(30,20,12,0.8)', border: '1px solid rgba(196,149,42,0.2)', color: 'rgba(237,226,204,0.6)' }}>
-          <X size={14} />
+          className="absolute flex items-center justify-center rounded-full"
+          style={{
+            top: 12, right: 12,
+            width: 34, height: 34,
+            background: 'rgba(10,8,6,0.78)',
+            border: '1px solid rgba(196,149,42,0.25)',
+            color: 'rgba(237,226,204,0.85)',
+            backdropFilter: 'blur(6px)',
+          }}>
+          <X size={15} />
         </button>
-
-        {/* Prev/Next buttons */}
-        {(hasPrev || hasNext) && zoom === 1 && (
-          <div className="absolute top-1/3 inset-x-0 flex justify-between px-3 pointer-events-none">
-            {hasPrev && (
-              <button type="button" onClick={onPrev} aria-label="Previous" data-ripple
-                className="pointer-events-auto flex items-center justify-center w-9 h-9 rounded-full"
-                style={{ background: 'rgba(10,8,6,0.7)', border: '1px solid rgba(196,149,42,0.2)', color: 'rgba(237,226,204,0.7)' }}>
-                <ChevronLeft size={16} />
-              </button>
-            )}
-            <div className="flex-1" />
-            {hasNext && (
-              <button type="button" onClick={onNext} aria-label="Next" data-ripple
-                className="pointer-events-auto flex items-center justify-center w-9 h-9 rounded-full"
-                style={{ background: 'rgba(10,8,6,0.7)', border: '1px solid rgba(196,149,42,0.2)', color: 'rgba(237,226,204,0.7)' }}>
-                <ChevronRight size={16} />
-              </button>
-            )}
-          </div>
-        )}
       </motion.div>
     </motion.div>
   )
