@@ -7,7 +7,13 @@ interface LetterPaperProps {
   content: LetterContent
 }
 
+const ease = [0.16, 1, 0.3, 1] as const
+
 export function LetterPaper({ content }: LetterPaperProps): ReactNode {
+  // Sequence delays: opener → stanza 1 → 2 → … → signature
+  const stanzaDelay = (i: number): number => 0.35 + i * 0.18
+  const signatureDelay = stanzaDelay(content.paragraphs.length) + 0.1
+
   return (
     <div
       className="relative w-full"
@@ -39,23 +45,22 @@ export function LetterPaper({ content }: LetterPaperProps): ReactNode {
         <div className="absolute top-0 right-0 w-16 h-16 pointer-events-none" style={{ background: 'radial-gradient(ellipse at 100% 0%, rgba(196,149,42,0.04) 0%, transparent 80%)' }} aria-hidden />
         <div className="absolute bottom-0 left-0 w-16 h-16 pointer-events-none" style={{ background: 'radial-gradient(ellipse at 0% 100%, rgba(196,149,42,0.03) 0%, transparent 80%)' }} aria-hidden />
 
-        {/* Decorative opener — sweeps in like ink */}
+        {/* Opener / title — fades in first */}
         <motion.p
           className="romantic-line mb-7 text-center"
           style={{
-            color: 'rgba(196,149,42,0.7)',
-            fontSize: 'clamp(1.1rem, 3vw, 1.35rem)',
+            color: 'rgba(196,149,42,0.75)',
+            fontSize: 'clamp(1.15rem, 3vw, 1.4rem)',
             letterSpacing: '0.02em',
-            clipPath: 'inset(0 100% 0 0)',
           }}
-          whileInView={{ clipPath: 'inset(0 0% 0 0)' }}
-          viewport={{ once: true, amount: 0.8 }}
-          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, ease, delay: 0.1 }}
         >
           {content.opener}
         </motion.p>
 
-        {/* Stanzas — each one sweeps in left-to-right like handwriting.
+        {/* Stanzas — each fades in below the previous one.
             white-space: pre-line preserves line breaks inside a stanza so
             multi-line poetry reads with the intended cadence. */}
         {content.paragraphs.map((para, i) => (
@@ -68,11 +73,10 @@ export function LetterPaper({ content }: LetterPaperProps): ReactNode {
               lineHeight: 1.85,
               whiteSpace: 'pre-line',
               marginBottom: '1.6rem',
-              clipPath: 'inset(0 100% 0 0)',
             }}
-            whileInView={{ clipPath: 'inset(0 0% 0 0)' }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 1.2, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.75, ease, delay: stanzaDelay(i) }}
           >
             {para}
           </motion.p>
@@ -82,17 +86,16 @@ export function LetterPaper({ content }: LetterPaperProps): ReactNode {
         <motion.div
           className="mt-8 border-t pt-6"
           style={{ borderColor: 'rgba(196,149,42,0.15)' }}
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.9, delay: content.paragraphs.length * 0.08 + 0.3 }}
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease, delay: signatureDelay }}
         >
           <motion.p
             className="romantic-line text-2xl"
-            style={{ color: 'var(--color-amber)', opacity: 0.85, clipPath: 'inset(0 100% 0 0)' }}
-            whileInView={{ clipPath: 'inset(0 0% 0 0)' }}
-            viewport={{ once: true }}
-            transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: content.paragraphs.length * 0.08 + 0.5 }}
+            style={{ color: 'var(--color-amber)', opacity: 0.85 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.85 }}
+            transition={{ duration: 0.9, ease, delay: signatureDelay + 0.15 }}
           >
             {content.signature}
           </motion.p>
