@@ -60,9 +60,10 @@ export function TimelinePage(): ReactNode {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.5 }}
           >
-            {/* Center vertical line — draws from top to bottom */}
+            {/* Center vertical line — draws from top to bottom.
+                Position tracks the dot column: mobile (w-12 + gap-3) vs sm:+ (w-16 + gap-4) */}
             <motion.div
-              className="absolute left-[5.25rem] top-0 bottom-0 w-px"
+              className="absolute left-[4.15rem] sm:left-[5.25rem] top-0 bottom-0 w-px"
               style={{
                 background: 'linear-gradient(to bottom, transparent, rgba(196,149,42,0.18) 8%, rgba(196,149,42,0.18) 92%, transparent)',
                 transformOrigin: 'top',

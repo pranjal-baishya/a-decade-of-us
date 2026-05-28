@@ -91,7 +91,7 @@ export function EndingPage(): ReactNode {
 
         {/* Stats scoreboard */}
         <motion.div
-          className="mb-7"
+          className="mb-10"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, delay: 1.6 }}
@@ -131,7 +131,7 @@ export function EndingPage(): ReactNode {
 
         {/* Actions */}
         <motion.div
-          className="flex flex-col gap-3 items-center"
+          className="flex flex-col gap-5 items-center"
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 2.2 }}

@@ -29,7 +29,7 @@ export function TimelineNode({ chapter, index, isActive = false, isVisited = fal
 
   return (
     <motion.div
-      className="flex items-center gap-4 cursor-pointer group tap-press"
+      className="flex items-center gap-3 sm:gap-4 cursor-pointer group tap-press"
       data-ripple
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -39,7 +39,7 @@ export function TimelineNode({ chapter, index, isActive = false, isVisited = fal
     >
       {/* Year number — fades in from the left */}
       <motion.div
-        className="w-16 text-right shrink-0"
+        className="w-12 sm:w-16 text-right shrink-0"
         initial={{ opacity: 0, x: -8 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.5, delay: baseDelay, ease }}
@@ -146,8 +146,8 @@ export function TimelineNode({ chapter, index, isActive = false, isVisited = fal
         {/* Thumbnail — slides in from the right with delay */}
         {thumbnailSrc && (
           <motion.div
-            className="shrink-0 overflow-hidden rounded-lg ml-3"
-            style={{ width: 48, height: 48, border: '1px solid var(--color-amber-border)' }}
+            className="shrink-0 overflow-hidden rounded-lg ml-2 sm:ml-3"
+            style={{ width: 42, height: 42, border: '1px solid var(--color-amber-border)' }}
             initial={{ opacity: 0, x: 12, scale: 0.85 }}
             animate={{ opacity: 0.75, x: 0, scale: 1 }}
             transition={{ duration: 0.6, delay: baseDelay + 0.2, ease }}

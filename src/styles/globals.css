@@ -279,7 +279,9 @@ button:focus-visible > .shimmer-sweep {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 5rem clamp(1.5rem, 5vw, 3rem) 1.5rem;
+  /* Horizontal padding tightens on small screens (down to 14px) so two
+     polaroid columns stop cropping on ≤320-360px devices. */
+  padding: 5rem clamp(0.875rem, 4vw, 3rem) 1.5rem;
 }
 
 .page-content-inner {

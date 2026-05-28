@@ -88,9 +88,10 @@ function PromiseCard({ promise, index, sealed, onSeal }: PromiseCardProps): Reac
 
       {/* Promise text card */}
       <motion.div
-        className="flex-1 p-5 rounded-xl"
+        className="flex-1 rounded-xl"
         animate={sealed ? { borderColor: 'rgba(196,128,110,0.50)' } : undefined}
         style={{
+          padding: '20px 22px 18px',
           background: sealed
             ? 'linear-gradient(135deg, rgba(36,20,16,0.7), rgba(28,16,10,0.7))'
             : 'linear-gradient(135deg, rgba(32,24,16,0.6), rgba(24,18,10,0.6))',
@@ -113,7 +114,7 @@ function PromiseCard({ promise, index, sealed, onSeal }: PromiseCardProps): Reac
         </p>
         {sealed ? (
           <motion.p
-            className="romantic-line mt-2"
+            className="romantic-line mt-3"
             style={{ color: 'rgba(196,128,110,0.65)', fontSize: '0.75rem' }}
             initial={{ opacity: 0, y: 4 }}
             animate={{ opacity: 1, y: 0 }}
@@ -122,7 +123,7 @@ function PromiseCard({ promise, index, sealed, onSeal }: PromiseCardProps): Reac
             ✦ Sealed with love
           </motion.p>
         ) : (
-          <p className="font-sans mt-2" style={{ color: 'rgba(196,128,110,0.35)', fontSize: '0.6rem', letterSpacing: '0.12em' }}>
+          <p className="font-sans mt-3" style={{ color: 'rgba(196,128,110,0.35)', fontSize: '0.6rem', letterSpacing: '0.12em' }}>
             Tap to seal
           </p>
         )}
@@ -193,7 +194,7 @@ export function PromisesPage(): ReactNode {
           </motion.div>
 
           {/* Promises list */}
-          <div className="flex flex-col gap-5">
+          <div className="flex flex-col gap-7">
             {PROMISES.map((promise, i) => (
               <PromiseCard
                 key={promise.id}

@@ -109,7 +109,7 @@ export function OpeningPage(): ReactNode {
 
         {/* Days counter */}
         <motion.p
-          className="font-sans mb-7"
+          className="font-sans mb-10"
           style={{ color: 'var(--color-amber)', fontSize: '0.78rem', letterSpacing: '0.2em', opacity: 0.75 }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 0.75 }}

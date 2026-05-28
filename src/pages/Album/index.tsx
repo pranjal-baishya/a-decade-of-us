@@ -84,9 +84,9 @@ export function AlbumPage(): ReactNode {
                 transition={{ duration: 0.6, delay: 0.05 * Math.min(yearIndex, 4) }}
               >
                 {/* Year divider */}
-                <div className="flex items-center gap-4 mb-6 mt-4">
-                  <DriedFloral variant={yearIndex % 3 === 0 ? 1 : yearIndex % 3 === 1 ? 2 : 3} size={28} opacity={0.45} rotate={yearIndex * 20} />
-                  <div className="flex flex-col">
+                <div className="flex items-center gap-3 sm:gap-4 mb-6 mt-4">
+                  <DriedFloral variant={yearIndex % 3 === 0 ? 1 : yearIndex % 3 === 1 ? 2 : 3} size={26} opacity={0.45} rotate={yearIndex * 20} />
+                  <div className="flex flex-col min-w-0">
                     <span
                       className="font-serif"
                       style={{

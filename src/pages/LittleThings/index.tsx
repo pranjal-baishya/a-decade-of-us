@@ -150,7 +150,7 @@ export function LittleThingsPage(): ReactNode {
       <div className="page-content velvet-bg">
         <div className="page-content-inner" style={{ maxWidth: 540, position: 'relative', zIndex: 1 }}>
           <motion.div
-            className="mb-12 text-center"
+            className="mb-16 text-center"
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7 }}

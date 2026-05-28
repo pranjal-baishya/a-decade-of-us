@@ -40,7 +40,7 @@ export function PlacesPage(): ReactNode {
 
           {/* Real map */}
           <motion.div
-            className="mb-12"
+            className="mb-16"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3 }}

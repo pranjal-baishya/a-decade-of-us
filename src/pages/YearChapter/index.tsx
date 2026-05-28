@@ -149,18 +149,21 @@ export function YearChapterPage(): ReactNode {
         ) : (
           <div className="w-full h-full" style={{ background: 'linear-gradient(135deg, #1a1410 0%, #0f0c09 100%)' }} />
         )}
-        {/* Year overlay */}
-        <div className="absolute inset-0 flex flex-col justify-end px-6 pb-6" style={{ background: 'linear-gradient(to top, rgba(10,8,6,0.9) 0%, rgba(10,8,6,0.4) 60%, transparent 100%)' }}>
+        {/* Year overlay — centered horizontally, anchored to bottom */}
+        <div
+          className="absolute inset-0 flex flex-col justify-end items-center text-center px-6 pb-6"
+          style={{ background: 'linear-gradient(to top, rgba(10,8,6,0.92) 0%, rgba(10,8,6,0.45) 55%, transparent 100%)' }}
+        >
           <motion.p
             className="font-serif"
-            style={{ fontSize: 'clamp(4rem, 14vw, 7rem)', color: 'rgba(196,149,42,0.75)', lineHeight: 0.9, fontWeight: 300 }}
+            style={{ fontSize: 'clamp(4rem, 14vw, 7rem)', color: 'rgba(196,149,42,0.78)', lineHeight: 0.9, fontWeight: 300, letterSpacing: '-0.01em' }}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           >
             {chapter.year}
           </motion.p>
-          <p className="font-serif mt-1" style={{ fontSize: 'clamp(1.1rem, 3vw, 1.5rem)', color: 'var(--color-cream)', fontWeight: 400 }}>
+          <p className="font-serif mt-2" style={{ fontSize: 'clamp(1.1rem, 3vw, 1.5rem)', color: 'var(--color-cream)', fontWeight: 400 }}>
             <SplitHeadline text={chapter.title} delay={0.2} />
           </p>
         </div>
