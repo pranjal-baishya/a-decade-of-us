@@ -6,11 +6,13 @@ import { PrimaryButton } from '@/components/ui/PrimaryButton'
 import { SplitHeadline } from '@/components/ui/SplitHeadline'
 import { useDaysCounter } from '@/hooks/useDaysCounter'
 import { useAnimatedCounter } from '@/hooks/useAnimatedCounter'
+import { isAnniversaryToday } from '@/lib/anniversary'
 import { COUPLE } from '@/data/couple'
 
 const ease = [0.16, 1, 0.3, 1] as const
 
-function getGreeting(): string {
+function getGreeting(isAnniversary: boolean): string {
+  if (isAnniversary) return 'Happy Anniversary,'
   const h = new Date().getHours()
   if (h < 5)  return 'Good night,'
   if (h < 12) return 'Good morning,'
@@ -23,7 +25,8 @@ export function OpeningPage(): ReactNode {
   const navigate = useNavigate()
   const { years, totalDays } = useDaysCounter()
   const animatedDays = useAnimatedCounter(totalDays, 1800, 2400)
-  const greeting = getGreeting()
+  const isAnniv = isAnniversaryToday()
+  const greeting = getGreeting(isAnniv)
   const letters = COUPLE.partnerB.split('')
 
   return (
@@ -42,7 +45,7 @@ export function OpeningPage(): ReactNode {
         </motion.p>
 
         {/* Her name typed letter-by-letter */}
-        <div className="flex justify-center mb-7" aria-label={COUPLE.partnerB}>
+        <div className="flex justify-center mb-10" aria-label={COUPLE.partnerB}>
           {letters.map((char, i) => (
             <motion.span
               key={i}
@@ -62,17 +65,6 @@ export function OpeningPage(): ReactNode {
             </motion.span>
           ))}
         </div>
-
-        {/* Eyebrow */}
-        <motion.p
-          className="font-sans tracking-[0.45em] uppercase mb-6"
-          style={{ color: 'var(--color-amber)', fontSize: '0.68rem', opacity: 0.8 }}
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 0.8, y: 0 }}
-          transition={{ duration: 0.9, ease, delay: 0.3 + letters.length * 0.06 + 0.2 }}
-        >
-          {COUPLE.partnerA} & {COUPLE.partnerB}
-        </motion.p>
 
         {/* Main headline — split word-by-word */}
         <h1
@@ -109,7 +101,7 @@ export function OpeningPage(): ReactNode {
 
         {/* Days counter */}
         <motion.p
-          className="font-sans mb-10"
+          className="font-sans mb-14"
           style={{ color: 'var(--color-amber)', fontSize: '0.78rem', letterSpacing: '0.2em', opacity: 0.75 }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 0.75 }}

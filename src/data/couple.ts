@@ -21,7 +21,7 @@ export interface CoupleConfig {
 
 export const COUPLE: CoupleConfig = {
   partnerA: 'Pranjal',          // ← your name
-  partnerB: 'My Love',          // ← her name (update before sharing!)
+  partnerB: 'Pari',             // ← her name
   anniversaryDate: '2016-05-29', // ← the day it started
   song: null,                   // ← e.g. '/audio/our-song.mp3'
 }

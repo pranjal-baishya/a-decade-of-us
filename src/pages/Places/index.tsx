@@ -5,6 +5,7 @@ import { SectionHeader } from '@/components/layout/SectionHeader'
 import { PlaceCard } from '@/components/places/PlaceCard'
 import { RealMap } from '@/components/places/RealMap'
 import { PolaroidPhoto } from '@/components/scrapbook/PolaroidPhoto'
+import { DriedFloral } from '@/components/scrapbook/DriedFloral'
 import { PLACES, PLACE_STATS } from '@/data/places'
 import { MEMORIES } from '@/data/memories'
 import { formatLong } from '@/lib/formatDate'
@@ -40,7 +41,6 @@ export function PlacesPage(): ReactNode {
 
           {/* Real map */}
           <motion.div
-            className="mb-16"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3 }}
@@ -52,6 +52,27 @@ export function PlacesPage(): ReactNode {
           {activePlaceId && (
             <PlaceCard place={activePlace} onClose={() => setActivePlaceId(null)} />
           )}
+
+          {/* Visual break between the map and the polaroid grid */}
+          <motion.div
+            className="flex items-center gap-4 my-12"
+            aria-hidden
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7 }}
+          >
+            <div className="flex-1 h-px" style={{ background: 'linear-gradient(to right, transparent, rgba(196,149,42,0.28))' }} />
+            <DriedFloral variant={2} size={26} opacity={0.5} />
+            <span
+              className="font-sans uppercase shrink-0"
+              style={{ color: 'var(--color-amber)', fontSize: '0.6rem', letterSpacing: '0.28em', opacity: 0.7 }}
+            >
+              Our places
+            </span>
+            <DriedFloral variant={2} size={26} opacity={0.5} rotate={180} />
+            <div className="flex-1 h-px" style={{ background: 'linear-gradient(to left, transparent, rgba(196,149,42,0.28))' }} />
+          </motion.div>
 
           {/* Place list — polaroid cards */}
           <div className="grid grid-cols-2 gap-6 mb-10">
