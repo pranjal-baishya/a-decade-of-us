@@ -8,13 +8,11 @@ import { SplitHeadline } from '@/components/ui/SplitHeadline'
 import { useDaysCounter } from '@/hooks/useDaysCounter'
 import { useAnimatedCounter } from '@/hooks/useAnimatedCounter'
 import { COUPLE } from '@/data/couple'
-import { PHOTO_COUNT } from '@/data/photoLibrary'
 
 export function EndingPage(): ReactNode {
   const navigate = useNavigate()
   const { years, totalDays } = useDaysCounter()
-  const animatedDays     = useAnimatedCounter(totalDays,   1600, 1600)
-  const animatedMemories = useAnimatedCounter(PHOTO_COUNT, 1000, 1900)
+  const animatedDays = useAnimatedCounter(totalDays, 1600, 1600)
 
   return (
     <PageShell>
@@ -109,9 +107,9 @@ export function EndingPage(): ReactNode {
             }}
           >
             {[
-              { value: animatedDays,     label: 'days'     },
-              { value: animatedMemories, label: 'memories' },
-              { value: '1',              label: 'you'      },
+              { value: animatedDays, label: 'days'     },
+              { value: '∞',          label: 'memories' },
+              { value: '1',          label: 'you'      },
             ].map((stat, i) => (
               <div key={stat.label} className="flex flex-col items-center">
                 <span
