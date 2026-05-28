@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import type { YearChapter } from '@/types/section'
 import { MEMORIES } from '@/data/memories'
 import { EASE } from '@/lib/motion'
+import { assetUrl } from '@/lib/assetUrl'
 import { useReducedMotion } from '@/hooks/useReducedMotion'
 
 interface TimelineNodeProps {
@@ -152,7 +153,7 @@ export function TimelineNode({ chapter, index, isActive = false, isVisited = fal
             transition={{ duration: 0.6, delay: baseDelay + 0.2, ease }}
             variants={{ hover: { opacity: 1, scale: 1.08, rotate: -1 } }}
           >
-            <img src={thumbnailSrc} alt="" className="w-full h-full object-cover photo-grade" loading="lazy" />
+            <img src={assetUrl(thumbnailSrc)} alt="" className="w-full h-full object-cover photo-grade" loading="lazy" />
           </motion.div>
         )}
       </motion.div>

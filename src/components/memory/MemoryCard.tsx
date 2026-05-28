@@ -1,6 +1,7 @@
 import { type ReactNode } from 'react'
 import { motion } from 'framer-motion'
 import type { MemoryCard as MemoryCardType } from '@/types/section'
+import { assetUrl } from '@/lib/assetUrl'
 
 type CardVariant = 'polaroid' | 'framed' | 'filmstrip' | 'pinned'
 
@@ -66,7 +67,7 @@ export function MemoryCard({
       >
         <div className="w-full h-full overflow-hidden" style={{ background: '#c8b89a' }}>
           {memory.imageUrl ? (
-            <img src={memory.imageUrl} alt={memory.title} className="w-full h-full object-cover" loading="lazy" />
+            <img src={assetUrl(memory.imageUrl)} alt={memory.title} className="w-full h-full object-cover" loading="lazy" />
           ) : (
             <PhotoPlaceholder title={memory.title} date={memory.date} />
           )}
@@ -104,7 +105,7 @@ export function MemoryCard({
       <div className="w-full overflow-hidden" style={{ height: '72%' }}>
         {memory.imageUrl ? (
           <img
-            src={memory.imageUrl}
+            src={assetUrl(memory.imageUrl)}
             alt={memory.title}
             className="w-full h-full object-cover transition-transform duration-700"
             style={{ transform: 'scale(1.02)' }}

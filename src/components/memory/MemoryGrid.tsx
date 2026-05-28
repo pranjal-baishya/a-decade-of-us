@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import type { MemoryCard } from '@/types/section'
 import { EASE } from '@/lib/motion'
 import { formatShort } from '@/lib/formatDate'
+import { assetUrl } from '@/lib/assetUrl'
 
 interface MemoryGridProps {
   memories: MemoryCard[]
@@ -58,7 +59,7 @@ export function MemoryGrid({ memories, onCardClick }: MemoryGridProps): ReactNod
             onClick={() => onCardClick?.(hero)}
           >
             {hero.imageUrl ? (
-              <img src={hero.imageUrl} alt={hero.title} className="w-full h-full object-cover photo-grade" loading="lazy" data-cursor="heart" />
+              <img src={assetUrl(hero.imageUrl)} alt={hero.title} className="w-full h-full object-cover photo-grade" loading="lazy" data-cursor="heart" />
             ) : (
               <div className="w-full h-full flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #1a1410 0%, #241c14 100%)' }}>
                 <p className="font-serif text-sm" style={{ color: 'rgba(196,149,42,0.35)' }}>{hero.date}</p>
@@ -91,7 +92,7 @@ export function MemoryGrid({ memories, onCardClick }: MemoryGridProps): ReactNod
             onClick={() => onCardClick?.(mem)}
           >
             {mem.imageUrl ? (
-              <img src={mem.imageUrl} alt={mem.title} className="w-full h-full object-cover photo-grade" loading="lazy" data-cursor="heart" />
+              <img src={assetUrl(mem.imageUrl)} alt={mem.title} className="w-full h-full object-cover photo-grade" loading="lazy" data-cursor="heart" />
             ) : (
               <div className="w-full h-full flex items-end p-2" style={{ background: 'linear-gradient(135deg, #1a1410 0%, #201810 100%)' }}>
                 <p className="font-serif text-xs" style={{ color: 'rgba(196,149,42,0.4)' }}>{mem.date}</p>

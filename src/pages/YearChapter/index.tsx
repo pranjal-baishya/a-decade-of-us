@@ -13,6 +13,7 @@ import { YEARS } from '@/data/years'
 import { MEMORIES } from '@/data/memories'
 import { getPhotosByYear, type Photo } from '@/data/photoLibrary'
 import { formatPhotoDate } from '@/lib/formatDate'
+import { assetUrl } from '@/lib/assetUrl'
 import type { MemoryCard } from '@/types/section'
 import { useReducedMotion } from '@/hooks/useReducedMotion'
 import { SplitHeadline } from '@/components/ui/SplitHeadline'
@@ -133,7 +134,7 @@ export function YearChapterPage(): ReactNode {
       <div className="relative w-full overflow-hidden" style={{ height: '48dvh', minHeight: 260 }}>
         {chapter.heroPhoto ? (
           <motion.img
-            src={chapter.heroPhoto}
+            src={assetUrl(chapter.heroPhoto)}
             alt={chapter.title}
             className="w-full h-full object-cover photo-grade"
             style={{ objectPosition: 'center 15%', transformOrigin: '50% 15%' }}
@@ -179,7 +180,7 @@ export function YearChapterPage(): ReactNode {
           paddingRight: 16,
           paddingTop: 24,
           paddingBottom: 24,
-          '--year-bg-image': `url(${BG_IMAGE[getYearBackground(chapter.year)]})`,
+          '--year-bg-image': `url(${assetUrl(BG_IMAGE[getYearBackground(chapter.year)])})`,
           '--year-bg-opacity': BG_OPACITY[getYearBackground(chapter.year)],
         } as React.CSSProperties}
       >
@@ -255,7 +256,7 @@ export function YearChapterPage(): ReactNode {
                 <ChevronLeft size={14} style={{ color: 'var(--color-amber)', opacity: 0.7, flexShrink: 0 }} />
                 {prevChapter.heroPhoto && (
                   <div className="w-9 h-9 rounded-lg overflow-hidden shrink-0">
-                    <img src={prevChapter.heroPhoto} alt="" className="w-full h-full object-cover photo-grade" loading="lazy" />
+                    <img src={assetUrl(prevChapter.heroPhoto)} alt="" className="w-full h-full object-cover photo-grade" loading="lazy" />
                   </div>
                 )}
                 <div className="min-w-0">
@@ -284,7 +285,7 @@ export function YearChapterPage(): ReactNode {
                 </div>
                 {nextChapter.heroPhoto && (
                   <div className="w-9 h-9 rounded-lg overflow-hidden shrink-0">
-                    <img src={nextChapter.heroPhoto} alt="" className="w-full h-full object-cover photo-grade" loading="lazy" />
+                    <img src={assetUrl(nextChapter.heroPhoto)} alt="" className="w-full h-full object-cover photo-grade" loading="lazy" />
                   </div>
                 )}
                 <ChevronRight size={14} style={{ color: 'var(--color-amber)', opacity: 0.7, flexShrink: 0 }} />

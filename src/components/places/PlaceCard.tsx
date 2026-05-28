@@ -4,6 +4,7 @@ import { X, MapPin, ChevronLeft, ChevronRight } from 'lucide-react'
 import type { Place } from '@/types/section'
 import { formatLong } from '@/lib/formatDate'
 import { getPlacePhotos } from '@/lib/placePhotos'
+import { assetUrl } from '@/lib/assetUrl'
 
 interface PlaceCardProps {
   place: Place | null
@@ -82,7 +83,7 @@ function PlaceCardInner({ place, onClose }: PlaceCardInnerProps): ReactNode {
             <AnimatePresence mode="wait">
               <motion.img
                 key={photos[index]}
-                src={photos[index]}
+                src={assetUrl(photos[index])}
                 alt={`${place.name} photo ${index + 1}`}
                 className="w-full h-full object-cover photo-grade"
                 initial={{ opacity: 0, scale: 1.04 }}

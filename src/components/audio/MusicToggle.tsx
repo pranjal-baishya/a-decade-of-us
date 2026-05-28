@@ -1,6 +1,7 @@
 import { useRef, useState, useCallback, useEffect, type ReactNode } from 'react'
 import { motion } from 'framer-motion'
 import { COUPLE } from '@/data/couple'
+import { assetUrl } from '@/lib/assetUrl'
 
 function fadeVolume(
   audio: HTMLAudioElement,
@@ -35,7 +36,7 @@ export function MusicToggle(): ReactNode {
 
   useEffect(() => {
     if (!COUPLE.song) return
-    const audio = new Audio(COUPLE.song)
+    const audio = new Audio(assetUrl(COUPLE.song))
     audio.loop = true
     audio.volume = 0
     audio.preload = 'metadata'

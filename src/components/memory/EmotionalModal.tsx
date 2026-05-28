@@ -4,6 +4,7 @@ import { X, ChevronLeft, ChevronRight, MapPin } from 'lucide-react'
 import type { MemoryCard } from '@/types/section'
 import { PLACES } from '@/data/places'
 import { formatShort } from '@/lib/formatDate'
+import { assetUrl } from '@/lib/assetUrl'
 
 interface EmotionalModalProps {
   memory: MemoryCard | null
@@ -119,7 +120,7 @@ function ModalContent({ memory, onClose, onPrev, onNext, hasPrev, hasNext }: Mod
         >
           {memory.imageUrl ? (
             <motion.img
-              src={memory.imageUrl}
+              src={assetUrl(memory.imageUrl)}
               alt={memory.title}
               className="w-full h-full object-cover photo-grade"
               style={{ scale: zoom, transformOrigin: 'center', transition: zoom === 1 ? 'scale 0.3s ease' : 'none' }}

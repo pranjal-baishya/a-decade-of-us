@@ -1,6 +1,7 @@
 import { type ReactNode, type CSSProperties } from 'react'
 import { motion } from 'framer-motion'
 import { EASE } from '@/lib/motion'
+import { assetUrl } from '@/lib/assetUrl'
 
 type TapeVariant = 'top' | 'corners' | 'top-left' | 'top-right' | false
 type TapeColor   = 'gold' | 'blush' | 'sepia'
@@ -144,7 +145,7 @@ export function PolaroidPhoto({
         >
           {src ? (
             <img
-              src={src}
+              src={assetUrl(src)}
               alt={alt}
               className="w-full h-full object-cover photo-grade"
               loading="lazy"

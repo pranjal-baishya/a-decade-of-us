@@ -17,7 +17,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.svg', 'icons.svg', 'audio/**', 'memories/**'],
+      includeAssets: ['favicon.svg', 'icons.svg', 'audio/**', 'memories/**', 'assets/**', 'backgrounds/**'],
       manifest: {
         name: 'A Decade of Us',
         short_name: 'A Decade of Us',
@@ -56,11 +56,13 @@ export default defineConfig({
             },
           },
           {
-            urlPattern: /\/memories\/.*/i,
+            // Photos served from /public/assets/ and /public/memories/ —
+            // matched whether or not the GH Pages base prefix is present.
+            urlPattern: /\/(assets|memories|backgrounds)\/.*/i,
             handler: 'CacheFirst',
             options: {
-              cacheName: 'memories-cache',
-              expiration: { maxEntries: 80, maxAgeSeconds: 60 * 60 * 24 * 30 },
+              cacheName: 'photos-cache',
+              expiration: { maxEntries: 300, maxAgeSeconds: 60 * 60 * 24 * 30 },
               cacheableResponse: { statuses: [0, 200] },
             },
           },
