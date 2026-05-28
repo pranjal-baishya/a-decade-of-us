@@ -19,6 +19,9 @@ export function TimelineNode({ chapter, index, isActive = false, isVisited = fal
   const navigate = useNavigate()
   const prefersReduced = useReducedMotion()
   const previewMemory = MEMORIES.find((m) => m.id === chapter.memoryIds[0])
+  // Prefer the curated memory's image when one exists, else fall back to the
+  // year's hero photo so every timeline row gets a thumbnail.
+  const thumbnailSrc = previewMemory?.imageUrl ?? chapter.heroPhoto
 
   // Stagger children sequentially so the row "assembles" nicely
   const baseDelay = 0.7 + index * 0.08
@@ -140,7 +143,7 @@ export function TimelineNode({ chapter, index, isActive = false, isVisited = fal
         </motion.div>
 
         {/* Thumbnail — slides in from the right with delay */}
-        {previewMemory?.imageUrl && (
+        {thumbnailSrc && (
           <motion.div
             className="shrink-0 overflow-hidden rounded-lg ml-3"
             style={{ width: 48, height: 48, border: '1px solid var(--color-amber-border)' }}
@@ -149,7 +152,7 @@ export function TimelineNode({ chapter, index, isActive = false, isVisited = fal
             transition={{ duration: 0.6, delay: baseDelay + 0.2, ease }}
             variants={{ hover: { opacity: 1, scale: 1.08, rotate: -1 } }}
           >
-            <img src={previewMemory.imageUrl} alt="" className="w-full h-full object-cover photo-grade" loading="lazy" />
+            <img src={thumbnailSrc} alt="" className="w-full h-full object-cover photo-grade" loading="lazy" />
           </motion.div>
         )}
       </motion.div>

@@ -13,7 +13,7 @@ export function FavoritesPage(): ReactNode {
   const activeIdx = featured.findIndex((m) => m.id === activeMemory?.id)
 
   return (
-    <PageShell backTo="/timeline" backLabel="Timeline" continueTo="/messages" continueLabel="Messages →">
+    <PageShell backTo="/timeline" backLabel="Timeline" continueTo="/album" continueLabel="The Album →">
       <div className="page-content">
         <div className="page-content-inner" style={{ maxWidth: 480 }}>
           <motion.div

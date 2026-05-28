@@ -3,6 +3,7 @@
  * Run with: node scripts/optimize-images.mjs
  *
  * Recompresses everything in /public/ in-place:
+ *  - assets/*.jpg       → max 1600px wide, q80 JPG progressive (real photo library)
  *  - memories/*.jpg     → max 1400px wide, q82 JPG progressive
  *  - backgrounds/*.jpg  → max 1600px wide, q78 JPG progressive
  *  - og-image.jpg       → 1200x630 q85 JPG progressive
@@ -15,6 +16,7 @@ import sharp from 'sharp'
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+import heicConvert from 'heic-convert'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const PUBLIC = path.resolve(__dirname, '../public')
@@ -38,6 +40,76 @@ async function optimize(src, transformer, label) {
 async function main() {
   let totalBefore = 0
   let totalAfter = 0
+
+  // Helper: re-encode every supported image in a folder to JPEG (1600px, q80).
+  // Handles .jpg/.jpeg/.png/.heic/.heif transparently — output is always .jpg.
+  async function processAssetsFolder(folderAbs, label) {
+    let entries
+    try {
+      entries = await fs.readdir(folderAbs)
+    } catch (e) {
+      if (e.code === 'ENOENT') return { count: 0, before: 0, after: 0 }
+      throw e
+    }
+    const files = entries.filter((f) => /\.(jpe?g|png|heic|heif)$/i.test(f))
+    if (files.length === 0) return { count: 0, before: 0, after: 0 }
+
+    console.log(`\n── /public/${label}/ ${'─'.repeat(Math.max(0, 56 - label.length))}`)
+    let folderBefore = 0
+    let folderAfter = 0
+    for (const f of files.sort()) {
+      const src = path.join(folderAbs, f)
+      const input = await fs.readFile(src)
+      const before = input.length
+      const isHeic = /\.(heic|heif)$/i.test(f)
+
+      // For HEIC: sharp's bundled libheif can fail on Apple HEVC variants.
+      // Decode via heic-convert (pure JS) first to get a JPEG buffer,
+      // then run that through sharp for resize/compression.
+      let pipelineInput = input
+      if (isHeic) {
+        try {
+          const jpegBuf = await heicConvert({ buffer: input, format: 'JPEG', quality: 0.95 })
+          pipelineInput = Buffer.from(jpegBuf)
+        } catch (e) {
+          console.log(`  ⚠ ${f}: HEIC decode failed (${e.message}) — skipped`)
+          continue
+        }
+      }
+      const output = await sharp(pipelineInput)
+        .rotate()
+        .resize({ width: 1600, height: 1600, fit: 'inside', withoutEnlargement: true })
+        .jpeg({ quality: 80, progressive: true, mozjpeg: true })
+        .toBuffer()
+
+      // Always end up with .jpg on disk
+      const finalName = f.replace(/\.(png|jpeg|heic|heif)$/i, '.jpg')
+      const dst = path.join(folderAbs, finalName)
+      await fs.writeFile(dst, output)
+      if (path.resolve(dst) !== path.resolve(src)) await fs.unlink(src)
+
+      const after = output.length
+      const saved = ((1 - after / before) * 100).toFixed(1)
+      console.log(`${label}/${finalName.padEnd(30)} ${fmt(before).padStart(8)} → ${fmt(after).padStart(8)}  (-${saved}%)`)
+      folderBefore += before; folderAfter += after
+    }
+    return { count: files.length, before: folderBefore, after: folderAfter }
+  }
+
+  // assets/*.jpg (loose photo library) + assets/<place>/*.jpg (per-place folders)
+  const assetsDir = path.join(PUBLIC, 'assets')
+  try {
+    const top = await fs.readdir(assetsDir, { withFileTypes: true })
+    const subdirs = top.filter((d) => d.isDirectory()).map((d) => d.name).sort()
+    const root = await processAssetsFolder(assetsDir, 'assets')
+    totalBefore += root.before; totalAfter += root.after
+    for (const sub of subdirs) {
+      const r = await processAssetsFolder(path.join(assetsDir, sub), `assets/${sub}`)
+      totalBefore += r.before; totalAfter += r.after
+    }
+  } catch (e) {
+    if (e.code !== 'ENOENT') throw e
+  }
 
   // memories/*.jpg
   const memoriesDir = path.join(PUBLIC, 'memories')

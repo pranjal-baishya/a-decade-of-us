@@ -8,13 +8,13 @@ import { SplitHeadline } from '@/components/ui/SplitHeadline'
 import { useDaysCounter } from '@/hooks/useDaysCounter'
 import { useAnimatedCounter } from '@/hooks/useAnimatedCounter'
 import { COUPLE } from '@/data/couple'
-import { MEMORIES } from '@/data/memories'
+import { PHOTO_COUNT } from '@/data/photoLibrary'
 
 export function EndingPage(): ReactNode {
   const navigate = useNavigate()
   const { years, totalDays } = useDaysCounter()
-  const animatedDays     = useAnimatedCounter(totalDays,        1600, 1600)
-  const animatedMemories = useAnimatedCounter(MEMORIES.length, 1000, 1900)
+  const animatedDays     = useAnimatedCounter(totalDays,   1600, 1600)
+  const animatedMemories = useAnimatedCounter(PHOTO_COUNT, 1000, 1900)
 
   return (
     <PageShell>

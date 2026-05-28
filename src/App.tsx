@@ -13,7 +13,7 @@ const OpeningPage     = lazy(() => import('@/pages/Opening').then((m) => ({ defa
 const TimelinePage    = lazy(() => import('@/pages/Timeline').then((m) => ({ default: m.TimelinePage })))
 const YearChapterPage = lazy(() => import('@/pages/YearChapter').then((m) => ({ default: m.YearChapterPage })))
 const FavoritesPage   = lazy(() => import('@/pages/Favorites').then((m) => ({ default: m.FavoritesPage })))
-const MessagesPage    = lazy(() => import('@/pages/Messages').then((m) => ({ default: m.MessagesPage })))
+const AlbumPage       = lazy(() => import('@/pages/Album').then((m) => ({ default: m.AlbumPage })))
 const PlacesPage      = lazy(() => import('@/pages/Places').then((m) => ({ default: m.PlacesPage })))
 const LittleThingsPage= lazy(() => import('@/pages/LittleThings').then((m) => ({ default: m.LittleThingsPage })))
 const LetterPage      = lazy(() => import('@/pages/Letter').then((m) => ({ default: m.LetterPage })))
@@ -49,7 +49,7 @@ function AppRoutes(): ReactNode {
         <Route path="/timeline"        element={<TimelinePage />} />
         <Route path="/year/:year"      element={<YearChapterPage />} />
         <Route path="/favorites"       element={<FavoritesPage />} />
-        <Route path="/messages"        element={<MessagesPage />} />
+        <Route path="/album"           element={<AlbumPage />} />
         <Route path="/places"          element={<PlacesPage />} />
         <Route path="/little-things"   element={<LittleThingsPage />} />
         <Route path="/letter"          element={<LetterPage />} />

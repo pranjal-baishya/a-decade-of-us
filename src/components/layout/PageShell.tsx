@@ -20,7 +20,7 @@ type RouteKey =
   | '/'
   | '/timeline'
   | '/favorites'
-  | '/messages'
+  | '/album'
   | '/places'
   | '/little-things'
   | '/letter'
@@ -50,7 +50,7 @@ const ROUTE_VARIANTS: Record<RouteKey, Variants> = {
     animate: { opacity: 1, y: 0 },
     exit:    { opacity: 0, y: -10 },
   },
-  '/messages': {
+  '/album': {
     initial: { opacity: 0, y: 32 },
     animate: { opacity: 1, y: 0 },
     exit:    { opacity: 0, y: -10 },

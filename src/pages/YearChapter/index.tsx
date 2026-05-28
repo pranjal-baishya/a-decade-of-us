@@ -1,10 +1,9 @@
 import { useState, useEffect, type ReactNode } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { motion, useScroll, useTransform } from 'framer-motion'
-import { ChevronLeft, ChevronRight, MapPin } from 'lucide-react'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { PageShell } from '@/components/layout/PageShell'
 import { EmotionalModal } from '@/components/memory/EmotionalModal'
-import { MessageBubble } from '@/components/messages/MessageBubble'
 import { ScrapbookSpread } from '@/components/scrapbook/ScrapbookSpread'
 import { VintageStamp } from '@/components/scrapbook/VintageStamp'
 import { TicketStub, PassportStamp } from '@/components/scrapbook/TravelAccents'
@@ -12,11 +11,31 @@ import { TRAVEL_META } from '@/lib/travelMeta'
 import { getYearBackground, BG_IMAGE, BG_OPACITY } from '@/lib/yearBackground'
 import { YEARS } from '@/data/years'
 import { MEMORIES } from '@/data/memories'
-import { MESSAGES } from '@/data/messages'
-import { PLACES } from '@/data/places'
+import { getPhotosByYear, type Photo } from '@/data/photoLibrary'
+import { formatPhotoDate } from '@/lib/formatDate'
 import type { MemoryCard } from '@/types/section'
 import { useReducedMotion } from '@/hooks/useReducedMotion'
 import { SplitHeadline } from '@/components/ui/SplitHeadline'
+
+/**
+ * Convert a Photo from the auto-generated library into a MemoryCard so it can
+ * be rendered by ScrapbookSpread / EmotionalModal. If a curated MEMORIES entry
+ * already references the same image, prefer that one — it carries the prose
+ * (title + description) the user has hand-written.
+ */
+function photoToMemory(photo: Photo, curated: MemoryCard[]): MemoryCard {
+  const matched = curated.find((m) => m.imageUrl === photo.src)
+  if (matched) return matched
+  return {
+    id: photo.id,
+    title: '',
+    date: formatPhotoDate(photo),
+    year: photo.year,
+    description: '',
+    imageUrl: photo.src,
+    mediaType: 'photo',
+  }
+}
 
 export function YearChapterPage(): ReactNode {
   const { year } = useParams<{ year: string }>()
@@ -59,9 +78,16 @@ export function YearChapterPage(): ReactNode {
     )
   }
 
-  const chapterMemories = MEMORIES.filter((m) => chapter.memoryIds.includes(m.id))
-  const chapterMessages = MESSAGES.filter((m) => (chapter.messageIds ?? []).includes(m.id))
-  const chapterPlaces   = PLACES.filter((p) => chapter.placeIds.includes(p.id))
+  // Curated, prose-rich memories the user has hand-written for this year.
+  const curatedMemories = MEMORIES.filter((m) => chapter.memoryIds.includes(m.id))
+
+  // The full photo set for this year (chronological). Each photo becomes a
+  // MemoryCard so it slots into ScrapbookSpread + EmotionalModal. If a photo
+  // matches a curated memory by imageUrl, the curated entry's prose takes over.
+  const yearPhotos = getPhotosByYear(chapter.year)
+  const chapterMemories: MemoryCard[] = yearPhotos.length > 0
+    ? yearPhotos.map((p) => photoToMemory(p, curatedMemories))
+    : curatedMemories
 
   const activeIdx = chapterMemories.findIndex((m) => m.id === activeMemory?.id)
 
@@ -204,45 +230,12 @@ export function YearChapterPage(): ReactNode {
           )
         })()}
 
-        {/* Scrapbook spread — replaces MemoryGrid */}
+        {/* Scrapbook spread — every photo from this year */}
         {chapterMemories.length > 0 && (
           <ScrapbookSpread
             memories={chapterMemories}
             onCardClick={setActiveMemory}
           />
-        )}
-
-        {/* Places */}
-        {chapterPlaces.length > 0 && (
-          <div>
-            <p className="font-sans text-[0.62rem] tracking-[0.28em] uppercase mb-3" style={{ color: 'var(--color-amber)', opacity: 0.7 }}>
-              Places
-            </p>
-            <div className="flex gap-3 flex-wrap">
-              {chapterPlaces.map((place) => (
-                <div key={place.id} className="flex items-center gap-1.5 px-3 py-2 rounded-lg"
-                  style={{ background: 'var(--color-cinema-card)', border: '1px solid var(--color-amber-border)' }}>
-                  <MapPin size={11} style={{ color: 'var(--color-amber)' }} />
-                  <div>
-                    <p className="font-serif text-sm" style={{ color: 'var(--color-cream)' }}>{place.name}</p>
-                    <p className="font-sans text-[0.6rem]" style={{ color: 'var(--color-cream-muted)' }}>{place.dates}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Messages */}
-        {chapterMessages.length > 0 && (
-          <div>
-            <p className="font-sans text-[0.62rem] tracking-[0.28em] uppercase mb-4" style={{ color: 'var(--color-amber)', opacity: 0.7 }}>
-              Messages
-            </p>
-            <div className="space-y-4">
-              {chapterMessages.map((msg, i) => <MessageBubble key={msg.id} message={msg} index={i} />)}
-            </div>
-          </div>
         )}
 
         {/* Prev / Next year — inline mini-cards */}

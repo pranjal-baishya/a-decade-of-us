@@ -21,7 +21,7 @@ export function PlacesPage(): ReactNode {
   }
 
   return (
-    <PageShell backTo="/messages" backLabel="Messages" continueTo="/little-things" continueLabel="Little Things →">
+    <PageShell backTo="/album" backLabel="Album" continueTo="/little-things" continueLabel="Little Things →">
       <div className="page-content">
         <div className="page-content-inner" style={{ maxWidth: 540 }}>
           <motion.div

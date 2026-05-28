@@ -32,3 +32,14 @@ export function formatYear(input: string | undefined): string {
   const match = input.match(/\d{4}/)
   return match ? match[0] : input.trim()
 }
+
+const MONTH_SHORT = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+
+/**
+ * Pretty-print a Photo from the photo library.
+ *   formatPhotoDate({year:2018, month:5, day:29}) -> "May 29, 2018"
+ */
+export function formatPhotoDate(p: { year: number; month: number; day: number }): string {
+  const m = MONTH_SHORT[p.month - 1] ?? ''
+  return `${m} ${p.day}, ${p.year}`
+}
